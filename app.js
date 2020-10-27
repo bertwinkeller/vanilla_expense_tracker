@@ -6,41 +6,80 @@ const form = document.getElementById('form')
 const text = document.getElementById('text')
 const amount = document.getElementById('amount')
 
+const localStorageTransactions = JSON.parse(localStorage.getItem('transactions'))
 
-const dummyTransactions = [
-    {
-        id: 1,
-        text: 'Flower',
-        amount: -20
-    },
-    {
-        id: 2,
-        text: 'Xbox',
-        amount: -100
-    },
-    {
-        id: 3,
-        text: 'Salary',
-        amount: 120
-    },
-    {
-        id: 4,
-        text: 'Speakerss',
-        amount: -200
+
+let dummyTransactions = localStorage.getItem('transactions') !== null ? localStorageTransactions : []
+// let dummyTransactions = [
+//     {
+//         id: 1,
+//         text: 'Flower',
+//         amount: -20
+//     },
+//     {
+//         id: 2,
+//         text: 'Xbox',
+//         amount: -100
+//     },
+//     {
+//         id: 3,
+//         text: 'Salary',
+//         amount: 120
+//     },
+//     {
+//         id: 4,
+//         text: 'Speakerss',
+//         amount: -200
+//     }
+// ]
+
+function addFormTransaction(e){
+    e.preventDefault()
+    
+    let textValue = text.value
+    let amtValue = amount.value 
+
+    const transaction = {
+        id: generateId(),
+        text: textValue,
+        amount: parseInt(amtValue)
     }
-]
 
+    dummyTransactions.push(transaction)
+    AddTransaction(transaction)
+    updateValues()
+    updateLocalStorage()
+
+    text.value = ''
+    amount.value = ''
+       
+
+}
+
+function generateId(){
+    return Math.floor(Math.random() * 10000000)
+}
+
+function removeTransaction(id){
+
+    dummyTransactions = dummyTransactions.filter(transaction => 
+        transaction.id!== id)
+        
+
+        updateLocalStorage()
+
+        processArray(dummyTransactions)
+
+}
 
 function AddTransaction(transaction){
 
 const sign = transaction.amount > 0 ? '+': '-'
-
-
 const listItem = document.createElement("li")
 
 listItem.classList.add(transaction.amount > 0 ? 'plus' : 'minus')
 
-listItem.innerHTML = `${transaction.text} <span>${sign}${Math.abs(transaction.amount)}</span><button class="delete-btn"></button>`
+listItem.innerHTML = `${transaction.text} <span>${sign}${Math.abs(transaction.amount)}</span><button onClick="removeTransaction(${transaction.id})" class="delete-btn">X</button>`
 
 list.appendChild(listItem)
 
@@ -60,8 +99,15 @@ function processArray(array){
 processArray(dummyTransactions)
 
 
+function updateLocalStorage(){
+
+localStorage.setItem('dummyTransaction', JSON.stringify(dummyTransactions))
+
+}
+
 //update the balance, income and expense
 function updateValues(){
+    
 
     const amounts = dummyTransactions.map(transaction => transaction.amount)
 
@@ -83,3 +129,5 @@ function updateValues(){
     balance.innerText = `$${total}`
 
 }
+
+form.addEventListener('submit', addFormTransaction)
