@@ -6,10 +6,10 @@ const form = document.getElementById('form')
 const text = document.getElementById('text')
 const amount = document.getElementById('amount')
 
-const localStorageTransactions = JSON.parse(localStorage.getItem('transactions'))
+const localStorageTransactions = JSON.parse(localStorage.getItem('dummyTransactions'))
 
 
-let dummyTransactions = localStorage.getItem('transactions') !== null ? localStorageTransactions : []
+let dummyTransactions = localStorage.getItem('dummyTransactions') !== null ? localStorageTransactions : []
 // let dummyTransactions = [
 //     {
 //         id: 1,
@@ -101,7 +101,7 @@ processArray(dummyTransactions)
 
 function updateLocalStorage(){
 
-localStorage.setItem('dummyTransaction', JSON.stringify(dummyTransactions))
+localStorage.setItem('dummyTransactions', JSON.stringify(dummyTransactions))
 
 }
 
